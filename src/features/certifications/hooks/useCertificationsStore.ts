@@ -1,7 +1,8 @@
-import { useState, useCallback, useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
+import { useKV } from '@github/spark/hooks'
 import { Certification } from '../types'
 
-const MOCK_CERTIFICATIONS: Certification[] = [
+const DEFAULT_CERTIFICATIONS: Certification[] = [
   {
     id: 'AZ-900',
     name: 'Microsoft Certified: Azure Fundamentals',
@@ -106,53 +107,41 @@ interface UseCertificationsStoreReturn {
   error: string | null
   addCertification: (certification: Certification) => void
   updateCertification: (id: string, updates: Partial<Certification>) => void
+  deleteCertification: (id: string) => void
   refresh: () => Promise<void>
 }
 
 export function useCertificationsStore(): UseCertificationsStoreReturn {
-  const [certifications, setCertifications] = useState<Certification[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-  const loadCertifications = useCallback(async () => {
-    setIsLoading(true)
-    setError(null)
-    
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 800))
-      setCertifications(MOCK_CERTIFICATIONS)
-    } catch (err) {
-      setError('Failed to load certifications')
-      console.error(err)
-    } finally {
-      setIsLoading(false)
-    }
-  }, [])
-
-  useEffect(() => {
-    loadCertifications()
-  }, [loadCertifications])
+  const [certifications, setCertifications, deleteCertificationsKey] = useKV<Certification[]>(
+    'certifications-data',
+    DEFAULT_CERTIFICATIONS
+  )
 
   const addCertification = useCallback((certification: Certification) => {
-    setCertifications((current) => [...current, certification])
-  }, [])
+    setCertifications((current) => [...(current || []), certification])
+  }, [setCertifications])
 
   const updateCertification = useCallback((id: string, updates: Partial<Certification>) => {
     setCertifications((current) =>
-      current.map((cert) => (cert.id === id ? { ...cert, ...updates } : cert))
+      (current || []).map((cert) => (cert.id === id ? { ...cert, ...updates } : cert))
     )
-  }, [])
+  }, [setCertifications])
+
+  const deleteCertification = useCallback((id: string) => {
+    setCertifications((current) => (current || []).filter((cert) => cert.id !== id))
+  }, [setCertifications])
 
   const refresh = useCallback(async () => {
-    await loadCertifications()
-  }, [loadCertifications])
+    setCertifications(DEFAULT_CERTIFICATIONS)
+  }, [setCertifications])
 
   return {
-    certifications,
-    isLoading,
-    error,
+    certifications: certifications || [],
+    isLoading: false,
+    error: null,
     addCertification,
     updateCertification,
+    deleteCertification,
     refresh
   }
 }
