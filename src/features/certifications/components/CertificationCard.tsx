@@ -1,7 +1,7 @@
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { ArrowSquareOut, AmazonLogo, Cloud, BookOpen, PencilSimple, Trash } from '@phosphor-icons/react'
+import { ArrowSquareOut, AmazonLogo, Cloud, BookOpen, PencilSimple, Trash, Plus, Exam } from '@phosphor-icons/react'
 import { Certification } from '../types'
 import { motion } from 'framer-motion'
 
@@ -10,9 +10,11 @@ interface CertificationCardProps {
   index: number
   onEdit: (certification: Certification) => void
   onDelete: (certification: Certification) => void
+  onAddPracticeExam: (certification: Certification) => void
+  practiceExamCount?: number
 }
 
-export function CertificationCard({ certification, index, onEdit, onDelete }: CertificationCardProps) {
+export function CertificationCard({ certification, index, onEdit, onDelete, onAddPracticeExam, practiceExamCount = 0 }: CertificationCardProps) {
   const getLevelColor = (level: string) => {
     switch (level) {
       case 'Foundational':
@@ -109,34 +111,51 @@ export function CertificationCard({ certification, index, onEdit, onDelete }: Ce
           </div>
         )}
 
-        <div className="flex items-center justify-between gap-2">
+        <div className="flex flex-col gap-2">
           <Button
-            variant="ghost"
+            variant="outline"
             size="sm"
-            className="gap-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 px-3 h-9"
-            onClick={() => window.open(certification.studyGuideUrl, '_blank')}
+            className="gap-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 h-9 w-full"
+            onClick={() => onAddPracticeExam(certification)}
           >
-            <BookOpen size={16} weight="fill" />
-            Exam Guide
-            <ArrowSquareOut weight="bold" size={14} />
+            <Plus size={16} weight="bold" />
+            Add Practice Exam
+            {practiceExamCount > 0 && (
+              <Badge variant="secondary" className="ml-auto">
+                {practiceExamCount}
+              </Badge>
+            )}
           </Button>
-          <div className="flex items-center gap-1">
+          
+          <div className="flex items-center justify-between gap-2">
             <Button
               variant="ghost"
               size="sm"
-              className="gap-1 text-muted-foreground hover:text-blue-600 hover:bg-blue-50 px-2 h-9"
-              onClick={() => onEdit(certification)}
+              className="gap-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 px-3 h-9 flex-1"
+              onClick={() => window.open(certification.studyGuideUrl, '_blank')}
             >
-              <PencilSimple size={16} weight="bold" />
+              <BookOpen size={16} weight="fill" />
+              Exam Guide
+              <ArrowSquareOut weight="bold" size={14} />
             </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="gap-1 text-muted-foreground hover:text-destructive hover:bg-red-50 px-2 h-9"
-              onClick={() => onDelete(certification)}
-            >
-              <Trash size={16} weight="bold" />
-            </Button>
+            <div className="flex items-center gap-1">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="gap-1 text-muted-foreground hover:text-blue-600 hover:bg-blue-50 px-2 h-9"
+                onClick={() => onEdit(certification)}
+              >
+                <PencilSimple size={16} weight="bold" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="gap-1 text-muted-foreground hover:text-destructive hover:bg-red-50 px-2 h-9"
+                onClick={() => onDelete(certification)}
+              >
+                <Trash size={16} weight="bold" />
+              </Button>
+            </div>
           </div>
         </div>
       </Card>

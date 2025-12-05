@@ -5,12 +5,16 @@ interface CertificationGridProps {
   certifications: Certification[]
   onEdit: (cert: Certification) => void
   onDelete: (cert: Certification) => void
+  onAddPracticeExam: (cert: Certification) => void
+  getPracticeExamCount: (certId: string) => number
 }
 
 export function CertificationGrid({
   certifications,
   onEdit,
   onDelete,
+  onAddPracticeExam,
+  getPracticeExamCount,
 }: CertificationGridProps) {
   if (certifications.length === 0) {
     return (
@@ -29,6 +33,8 @@ export function CertificationGrid({
           index={index}
           onEdit={onEdit}
           onDelete={onDelete}
+          onAddPracticeExam={onAddPracticeExam}
+          practiceExamCount={getPracticeExamCount(cert.id)}
         />
       ))}
     </div>

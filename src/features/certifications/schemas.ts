@@ -1,22 +1,28 @@
 import { z } from 'zod'
 
-export const answerValueSchema = z.enum(['A', 'B', 'C', 'D'])
+export const answerValueSchema = z.enum(['A', 'B', 'C', 'D', 'E', 'F'])
 
 export const answerOptionSchema = z.object({
   value: answerValueSchema,
   text: z.string().min(1, 'Answer text is required'),
-  isCorrect: z.boolean()
+  isCorrectAnswer: z.boolean()
 })
 
 export const questionSchema = z.object({
   id: z.string().min(1, 'Question ID is required'),
   questionText: z.string().min(1, 'Question text is required'),
+  isMultiSelect: z.boolean(),
+  domain: z.string().min(1, 'Domain is required'),
+  service: z.string().min(1, 'Service is required'),
+  weightedDifficultyFactor: z.number().min(0).max(10, 'Weighted difficulty must be between 0 and 10'),
+  topic: z.string().optional(),
   options: z
     .array(answerOptionSchema)
-    .length(4, 'Each question must have exactly 4 options')
+    .min(2, 'Each question must have at least 2 options')
+    .max(6, 'Each question can have at most 6 options')
     .refine(
-      (options) => options.filter((opt) => opt.isCorrect).length === 1,
-      'Each question must have exactly one correct answer'
+      (options) => options.filter((opt) => opt.isCorrectAnswer).length >= 1,
+      'Each question must have at least one correct answer'
     ),
   explanation: z.string().min(1, 'Explanation is required'),
   difficulty: z.enum(['Easy', 'Medium', 'Hard'])

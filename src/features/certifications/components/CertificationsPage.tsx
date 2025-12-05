@@ -1,23 +1,35 @@
 import { useState, useMemo } from 'react'
 import { SquaresFour, List, BookOpen } from '@phosphor-icons/react'
 import { useCertificationsStore } from '../hooks/useCertificationsStore'
+import { usePracticeExamsStore } from '../hooks/usePracticeExamsStore'
 import { CertificationGrid } from './CertificationGrid'
 import { SearchBar } from './SearchBar'
 import { CertificationSkeleton } from '../../../components/CertificationSkeleton'
 import { EditCertificationDialog } from './EditCertificationDialog'
 import { DeleteCertificationDialog } from './DeleteCertificationDialog'
+import { AddPracticeExamDialog } from './AddPracticeExamDialog'
+import { PracticeExamEditor } from './PracticeExamEditor'
 import { Toaster } from '@/components/ui/sonner'
-import { Certification } from '../types'
+import { Certification, PracticeExam } from '../types'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 
 export function CertificationsPage() {
   const { certifications, isLoading, updateCertification, deleteCertification } = useCertificationsStore()
+  const { 
+    practiceExams, 
+    addPracticeExam, 
+    getPracticeExamsByCertificationId, 
+    hasPracticeExams 
+  } = usePracticeExamsStore()
+  
   const [searchQuery, setSearchQuery] = useState('')
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [editingCertification, setEditingCertification] = useState<Certification | null>(null)
   const [deletingCertification, setDeletingCertification] = useState<Certification | null>(null)
+  const [addingPracticeExamToCert, setAddingPracticeExamToCert] = useState<Certification | null>(null)
+  const [editingExamCertId, setEditingExamCertId] = useState<string | null>(null)
 
   const filteredCertifications = useMemo(() => {
     let filtered = certifications
@@ -38,6 +50,10 @@ export function CertificationsPage() {
     return filtered
   }, [certifications, searchQuery])
 
+  const getPracticeExamCount = (certId: string) => {
+    return getPracticeExamsByCertificationId(certId).length
+  }
+
   const handleEdit = (cert: Certification) => {
     setEditingCertification(cert)
   }
@@ -52,10 +68,29 @@ export function CertificationsPage() {
 
   const handleConfirmDelete = () => {
     if (deletingCertification) {
+      if (hasPracticeExams(deletingCertification.id)) {
+        toast.error('Cannot delete certification with associated practice exams')
+        return
+      }
       deleteCertification(deletingCertification.id)
       toast.success('Certification deleted successfully')
       setDeletingCertification(null)
     }
+  }
+
+  const handleAddPracticeExam = (cert: Certification) => {
+    setAddingPracticeExamToCert(cert)
+  }
+
+  const handleStartPracticeExamEditor = (certificationId: string) => {
+    setEditingExamCertId(certificationId)
+    setAddingPracticeExamToCert(null)
+  }
+
+  const handleSavePracticeExam = (exam: PracticeExam) => {
+    addPracticeExam(exam)
+    toast.success('Practice exam added successfully')
+    setEditingExamCertId(null)
   }
 
   return (
@@ -123,6 +158,8 @@ export function CertificationsPage() {
               certifications={filteredCertifications} 
               onEdit={handleEdit}
               onDelete={handleDelete}
+              onAddPracticeExam={handleAddPracticeExam}
+              getPracticeExamCount={getPracticeExamCount}
             />
             {filteredCertifications.length === 0 && searchQuery && (
               <div className="text-center py-12">
@@ -146,7 +183,25 @@ export function CertificationsPage() {
           open={deletingCertification !== null}
           onOpenChange={(open) => !open && setDeletingCertification(null)}
           onConfirm={handleConfirmDelete}
+          hasPracticeExams={deletingCertification ? hasPracticeExams(deletingCertification.id) : false}
+          practiceExamCount={deletingCertification ? getPracticeExamCount(deletingCertification.id) : 0}
         />
+
+        <AddPracticeExamDialog
+          certification={addingPracticeExamToCert}
+          open={addingPracticeExamToCert !== null}
+          onOpenChange={(open) => !open && setAddingPracticeExamToCert(null)}
+          onAddExam={handleStartPracticeExamEditor}
+        />
+
+        {editingExamCertId && (
+          <PracticeExamEditor
+            isOpen={true}
+            onClose={() => setEditingExamCertId(null)}
+            certificationId={editingExamCertId}
+            onSave={handleSavePracticeExam}
+          />
+        )}
       </div>
     </div>
   )

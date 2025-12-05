@@ -1,6 +1,6 @@
 # Planning Guide
 
-A clean, professional web application for browsing AWS and Microsoft cloud certifications, featuring detailed certification information including exam duration, questions, and passing scores.
+A professional web application for browsing AWS and Microsoft cloud certifications with comprehensive practice exam management, featuring detailed certification information, exam creation tools, and parent-child data relationships.
 
 **Experience Qualities**:
 1. **Clean** - Simple, uncluttered interface that puts certification information front and center
@@ -8,7 +8,7 @@ A clean, professional web application for browsing AWS and Microsoft cloud certi
 3. **Professional** - Modern card-based layout that reflects the serious, career-focused nature of professional certifications
 
 **Complexity Level**: Light Application (multiple features with basic state)
-This is a content showcase app with search functionality and view toggling. It features a clean card layout with detailed exam statistics, search filtering, and view mode options (grid/list).
+This is a content showcase app with search functionality, view toggling, certification management, and practice exam creation. It features a clean card layout with detailed exam statistics, search filtering, view mode options (grid/list), and comprehensive practice exam management with parent-child relationships.
 
 ## Essential Features
 
@@ -40,12 +40,45 @@ This is a content showcase app with search functionality and view toggling. It f
 - **Progression**: Card renders → Stats section displays three columns → Each stat shows label and value
 - **Success criteria**: All three stats are clearly visible and properly formatted
 
+### Practice Exam Management
+- **Functionality**: Add, edit, and manage practice exams for certifications with full metadata tracking
+- **Purpose**: Allows users to create comprehensive practice tests with questions, answers, and metadata (domain, service, difficulty, topic)
+- **Trigger**: User clicks "Add Practice Exam" on certification card OR selects "Save & Add Practice Exam" from search results
+- **Progression**: 
+  - From card: Click "Add Practice Exam" → Template dialog opens → User creates exam via JSON editor → Validation → Save
+  - From search: Select certification → Choose "Save & Add Practice Exam" → Certification saved → Practice exam editor opens → Create exam → Save
+- **Success criteria**: Practice exams are linked to parent certification, JSON validates against schema, exams persist with certification
+
+### Certification Deletion Constraint
+- **Functionality**: Prevent deletion of certifications that have associated practice exams
+- **Purpose**: Maintain data integrity and prevent orphaned practice exam records
+- **Trigger**: User attempts to delete a certification with existing practice exams
+- **Progression**: Click delete → System checks for child exams → Display warning with exam count → Prevent deletion
+- **Success criteria**: Cannot delete certification with exams, clear error message shown, user must delete exams first
+
+### Practice Exam Metadata
+- **Functionality**: Each question includes comprehensive metadata fields
+- **Purpose**: Enable detailed tracking and categorization of exam questions
+- **Fields**: 
+  - IsCorrectAnswer (boolean) - Marks correct answer option(s)
+  - IsMultiSelect (boolean) - Indicates multiple correct answers allowed
+  - Domain (string) - Certification knowledge domain
+  - Service (string) - Cloud service/technology covered
+  - Weighted Difficulty Factor (number 0-10) - Granular difficulty rating
+  - Topic (optional string) - Specific topic within domain
+- **Success criteria**: All metadata fields validate and persist correctly
+
 ## Edge Case Handling
 
 - **Empty Search Results**: Show "No certifications found" message when search returns zero results
 - **Missing Exam Statistics**: Handle certifications that may not have duration, questions, or pass score data
 - **Long Certification Names**: Text wraps appropriately within card boundaries
 - **Missing Study Guide Links**: All certifications have valid exam guide URLs
+- **Certification with Practice Exams**: Prevent deletion and show warning with exam count
+- **Invalid Practice Exam JSON**: Validate JSON structure and show detailed error messages
+- **Multi-Select Questions**: Support questions with multiple correct answers
+- **Optional Topic Field**: Allow questions without specific topic designation
+- **Practice Exam Count Display**: Show badge with count on "Add Practice Exam" button when exams exist
 
 ## Design Direction
 

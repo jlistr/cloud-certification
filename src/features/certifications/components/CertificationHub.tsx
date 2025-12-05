@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { MagnifyingGlass, Plus } from '@phosphor-icons/react'
+import { MagnifyingGlass, Plus, Exam, CaretDown } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
@@ -11,10 +11,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { toast } from 'sonner'
-import { Certification, CertificationProvider } from '../types'
+import { Certification, CertificationProvider, PracticeExam } from '../types'
 import { FilterButtons } from './FilterButtons'
 import { CertificationGrid } from './CertificationGrid'
+import { PracticeExamEditor } from './PracticeExamEditor'
 
 const MOCK_CERTIFICATIONS: Certification[] = [
   {
@@ -90,6 +97,7 @@ export function CertificationHub() {
   const [searchResults, setSearchResults] = useState<Certification[]>([])
   const [isSearching, setIsSearching] = useState(false)
   const [activeFilter, setActiveFilter] = useState<CertificationProvider | 'All'>('All')
+  const [addingExamToCertId, setAddingExamToCertId] = useState<string | null>(null)
 
   const handleSearch = async () => {
     if (!searchQuery.trim()) {
@@ -131,6 +139,19 @@ export function CertificationHub() {
     }
     setSavedCertifications([...savedCertifications, cert])
     toast.success(`${cert.name} saved!`)
+  }
+
+  const handleSelectCertificationWithExam = (cert: Certification) => {
+    const exists = savedCertifications.some((c) => c.id === cert.id)
+    if (!exists) {
+      setSavedCertifications([...savedCertifications, cert])
+    }
+    setAddingExamToCertId(cert.id)
+  }
+
+  const handleSavePracticeExam = (exam: PracticeExam) => {
+    toast.success('Practice exam added successfully')
+    setAddingExamToCertId(null)
   }
 
   const filteredSavedCertifications =
@@ -246,14 +267,25 @@ export function CertificationHub() {
                     <h3 className="font-semibold text-lg leading-tight">{cert.name}</h3>
                     <p className="text-sm text-muted-foreground">{cert.description}</p>
                   </div>
-                  <Button
-                    onClick={() => handleSelectCertification(cert)}
-                    variant="default"
-                    className="gap-2 whitespace-nowrap"
-                  >
-                    <Plus weight="bold" />
-                    Select & Save
-                  </Button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="default" className="gap-2 whitespace-nowrap">
+                        <Plus weight="bold" />
+                        Add Certification
+                        <CaretDown weight="bold" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-56">
+                      <DropdownMenuItem onClick={() => handleSelectCertification(cert)}>
+                        <Plus className="mr-2 h-4 w-4" weight="bold" />
+                        Save Only
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleSelectCertificationWithExam(cert)}>
+                        <Exam className="mr-2 h-4 w-4" weight="bold" />
+                        Save & Add Practice Exam
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
               </Card>
             ))}
@@ -283,8 +315,19 @@ export function CertificationHub() {
           certifications={filteredSavedCertifications} 
           onEdit={() => {}}
           onDelete={() => {}}
+          onAddPracticeExam={() => {}}
+          getPracticeExamCount={() => 0}
         />
       </section>
+
+      {addingExamToCertId && (
+        <PracticeExamEditor
+          isOpen={true}
+          onClose={() => setAddingExamToCertId(null)}
+          certificationId={addingExamToCertId}
+          onSave={handleSavePracticeExam}
+        />
+      )}
     </div>
   )
 }

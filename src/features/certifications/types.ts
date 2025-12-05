@@ -14,12 +14,12 @@ export interface Certification {
   passScore?: number
 }
 
-export type AnswerValue = 'A' | 'B' | 'C' | 'D'
+export type AnswerValue = 'A' | 'B' | 'C' | 'D' | 'E' | 'F'
 
 export interface AnswerOption {
   value: AnswerValue
   text: string
-  isCorrect: boolean
+  isCorrectAnswer: boolean
 }
 
 export interface Question {
@@ -28,6 +28,11 @@ export interface Question {
   options: AnswerOption[]
   explanation: string
   difficulty: 'Easy' | 'Medium' | 'Hard'
+  isMultiSelect: boolean
+  domain: string
+  service: string
+  weightedDifficultyFactor: number
+  topic?: string
 }
 
 export interface PracticeExam {

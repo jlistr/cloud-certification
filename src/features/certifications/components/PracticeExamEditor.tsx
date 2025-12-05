@@ -42,11 +42,16 @@ export function PracticeExamEditor({
             {
               id: 'q1',
               questionText: '',
+              isMultiSelect: false,
+              domain: '',
+              service: '',
+              weightedDifficultyFactor: 5,
+              topic: '',
               options: [
-                { value: 'A', text: '', isCorrect: false },
-                { value: 'B', text: '', isCorrect: false },
-                { value: 'C', text: '', isCorrect: true },
-                { value: 'D', text: '', isCorrect: false }
+                { value: 'A', text: '', isCorrectAnswer: false },
+                { value: 'B', text: '', isCorrectAnswer: false },
+                { value: 'C', text: '', isCorrectAnswer: true },
+                { value: 'D', text: '', isCorrectAnswer: false }
               ],
               explanation: '',
               difficulty: 'Medium'
