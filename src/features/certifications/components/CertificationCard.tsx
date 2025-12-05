@@ -1,16 +1,18 @@
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { ArrowSquareOut, AmazonLogo, Cloud, BookOpen } from '@phosphor-icons/react'
+import { ArrowSquareOut, AmazonLogo, Cloud, BookOpen, PencilSimple, Trash } from '@phosphor-icons/react'
 import { Certification } from '../types'
 import { motion } from 'framer-motion'
 
 interface CertificationCardProps {
   certification: Certification
   index: number
+  onEdit: (certification: Certification) => void
+  onDelete: (certification: Certification) => void
 }
 
-export function CertificationCard({ certification, index }: CertificationCardProps) {
+export function CertificationCard({ certification, index, onEdit, onDelete }: CertificationCardProps) {
   const getLevelColor = (level: string) => {
     switch (level) {
       case 'Foundational':
@@ -107,7 +109,7 @@ export function CertificationCard({ certification, index }: CertificationCardPro
           </div>
         )}
 
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-2">
           <Button
             variant="ghost"
             size="sm"
@@ -118,6 +120,24 @@ export function CertificationCard({ certification, index }: CertificationCardPro
             Exam Guide
             <ArrowSquareOut weight="bold" size={14} />
           </Button>
+          <div className="flex items-center gap-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="gap-1 text-muted-foreground hover:text-blue-600 hover:bg-blue-50 px-2 h-9"
+              onClick={() => onEdit(certification)}
+            >
+              <PencilSimple size={16} weight="bold" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="gap-1 text-muted-foreground hover:text-destructive hover:bg-red-50 px-2 h-9"
+              onClick={() => onDelete(certification)}
+            >
+              <Trash size={16} weight="bold" />
+            </Button>
+          </div>
         </div>
       </Card>
     </motion.div>

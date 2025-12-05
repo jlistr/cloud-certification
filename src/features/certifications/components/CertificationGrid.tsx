@@ -3,14 +3,14 @@ import { CertificationCard } from './CertificationCard'
 
 interface CertificationGridProps {
   certifications: Certification[]
-  onEdit?: (cert: Certification) => void
-  onAddExam?: (cert: Certification) => void
+  onEdit: (cert: Certification) => void
+  onDelete: (cert: Certification) => void
 }
 
 export function CertificationGrid({
   certifications,
   onEdit,
-  onAddExam,
+  onDelete,
 }: CertificationGridProps) {
   if (certifications.length === 0) {
     return (
@@ -27,6 +27,8 @@ export function CertificationGrid({
           key={cert.id}
           certification={cert}
           index={index}
+          onEdit={onEdit}
+          onDelete={onDelete}
         />
       ))}
     </div>

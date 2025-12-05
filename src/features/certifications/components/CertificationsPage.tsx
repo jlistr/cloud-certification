@@ -4,15 +4,20 @@ import { useCertificationsStore } from '../hooks/useCertificationsStore'
 import { CertificationGrid } from './CertificationGrid'
 import { SearchBar } from './SearchBar'
 import { CertificationSkeleton } from '../../../components/CertificationSkeleton'
+import { EditCertificationDialog } from './EditCertificationDialog'
+import { DeleteCertificationDialog } from './DeleteCertificationDialog'
 import { Toaster } from '@/components/ui/sonner'
-import { CertificationProvider } from '@/lib/types'
+import { Certification } from '../types'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { toast } from 'sonner'
 
 export function CertificationsPage() {
-  const { certifications, isLoading } = useCertificationsStore()
+  const { certifications, isLoading, updateCertification, deleteCertification } = useCertificationsStore()
   const [searchQuery, setSearchQuery] = useState('')
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
+  const [editingCertification, setEditingCertification] = useState<Certification | null>(null)
+  const [deletingCertification, setDeletingCertification] = useState<Certification | null>(null)
 
   const filteredCertifications = useMemo(() => {
     let filtered = certifications
@@ -32,6 +37,26 @@ export function CertificationsPage() {
 
     return filtered
   }, [certifications, searchQuery])
+
+  const handleEdit = (cert: Certification) => {
+    setEditingCertification(cert)
+  }
+
+  const handleSaveEdit = (updatedCert: Certification) => {
+    updateCertification(updatedCert.id, updatedCert)
+  }
+
+  const handleDelete = (cert: Certification) => {
+    setDeletingCertification(cert)
+  }
+
+  const handleConfirmDelete = () => {
+    if (deletingCertification) {
+      deleteCertification(deletingCertification.id)
+      toast.success('Certification deleted successfully')
+      setDeletingCertification(null)
+    }
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -94,7 +119,11 @@ export function CertificationsPage() {
           </div>
         ) : (
           <>
-            <CertificationGrid certifications={filteredCertifications} />
+            <CertificationGrid 
+              certifications={filteredCertifications} 
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+            />
             {filteredCertifications.length === 0 && searchQuery && (
               <div className="text-center py-12">
                 <p className="text-muted-foreground text-lg">
@@ -104,6 +133,20 @@ export function CertificationsPage() {
             )}
           </>
         )}
+
+        <EditCertificationDialog
+          certification={editingCertification}
+          open={editingCertification !== null}
+          onOpenChange={(open) => !open && setEditingCertification(null)}
+          onSave={handleSaveEdit}
+        />
+
+        <DeleteCertificationDialog
+          certification={deletingCertification}
+          open={deletingCertification !== null}
+          onOpenChange={(open) => !open && setDeletingCertification(null)}
+          onConfirm={handleConfirmDelete}
+        />
       </div>
     </div>
   )

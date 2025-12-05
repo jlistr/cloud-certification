@@ -279,7 +279,11 @@ export function CertificationHub() {
           </div>
         )}
 
-        <CertificationGrid certifications={filteredSavedCertifications} />
+        <CertificationGrid 
+          certifications={filteredSavedCertifications} 
+          onEdit={() => {}}
+          onDelete={() => {}}
+        />
       </section>
     </div>
   )
