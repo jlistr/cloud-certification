@@ -4,6 +4,7 @@ import { Certificate } from '@phosphor-icons/react'
 import { Certification, CertificationProvider, CertificationCard, FilterButtons, SearchBar } from '@/features/certifications'
 import { CertificationSkeleton } from '@/components/CertificationSkeleton'
 import { Button } from '@/components/ui/button'
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
 import { Toaster } from '@/components/ui/sonner'
 import { toast } from 'sonner'
 
