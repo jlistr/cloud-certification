@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { useKV } from '@github/spark/hooks'
 import { MagnifyingGlass, Plus } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -17,12 +16,75 @@ import { Certification, CertificationProvider } from '../types'
 import { FilterButtons } from './FilterButtons'
 import { CertificationGrid } from './CertificationGrid'
 
+const MOCK_CERTIFICATIONS: Certification[] = [
+  {
+    id: 'AZ-900',
+    name: 'Microsoft Certified: Azure Fundamentals',
+    provider: 'Microsoft',
+    level: 'Foundational',
+    description: 'Validates foundational knowledge of cloud services and how those services are provided with Microsoft Azure.',
+    studyGuideUrl: 'https://learn.microsoft.com/certifications/azure-fundamentals/'
+  },
+  {
+    id: 'AZ-104',
+    name: 'Microsoft Certified: Azure Administrator Associate',
+    provider: 'Microsoft',
+    level: 'Associate',
+    description: 'Validates skills in implementing, managing, and monitoring an organization\'s Microsoft Azure environment.',
+    studyGuideUrl: 'https://learn.microsoft.com/certifications/azure-administrator/'
+  },
+  {
+    id: 'AZ-305',
+    name: 'Microsoft Certified: Azure Solutions Architect Expert',
+    provider: 'Microsoft',
+    level: 'Expert',
+    description: 'Validates expertise in designing cloud and hybrid solutions that run on Microsoft Azure.',
+    studyGuideUrl: 'https://learn.microsoft.com/certifications/azure-solutions-architect/'
+  },
+  {
+    id: 'AZ-500',
+    name: 'Microsoft Certified: Azure Security Engineer Associate',
+    provider: 'Microsoft',
+    level: 'Associate',
+    description: 'Validates skills in implementing security controls and threat protection on Azure.',
+    studyGuideUrl: 'https://learn.microsoft.com/certifications/azure-security-engineer/'
+  },
+  {
+    id: 'CLF-C02',
+    name: 'AWS Certified Cloud Practitioner',
+    provider: 'AWS',
+    level: 'Foundational',
+    description: 'Validates overall understanding of the AWS Cloud, independent of specific technical roles.',
+    studyGuideUrl: 'https://aws.amazon.com/certification/certified-cloud-practitioner/'
+  },
+  {
+    id: 'SAA-C03',
+    name: 'AWS Certified Solutions Architect - Associate',
+    provider: 'AWS',
+    level: 'Associate',
+    description: 'Validates ability to design and implement distributed systems on AWS.',
+    studyGuideUrl: 'https://aws.amazon.com/certification/certified-solutions-architect-associate/'
+  },
+  {
+    id: 'SCS-C02',
+    name: 'AWS Certified Security - Specialty',
+    provider: 'AWS',
+    level: 'Specialty',
+    description: 'Validates expertise in securing AWS workloads and implementing security controls.',
+    studyGuideUrl: 'https://aws.amazon.com/certification/certified-security-specialty/'
+  },
+  {
+    id: 'DAS-C01',
+    name: 'AWS Certified Data Analytics - Specialty',
+    provider: 'AWS',
+    level: 'Specialty',
+    description: 'Validates expertise in designing and implementing AWS services to derive value from data.',
+    studyGuideUrl: 'https://aws.amazon.com/certification/certified-data-analytics-specialty/'
+  }
+]
+
 export function CertificationHub() {
-  const [savedCertifications, setSavedCertifications] = useKV<Certification[]>(
-    'saved-certifications',
-    []
-  )
-  
+  const [savedCertifications, setSavedCertifications] = useState<Certification[]>([])
   const [searchProvider, setSearchProvider] = useState<CertificationProvider>('Microsoft')
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState<Certification[]>([])
@@ -38,30 +100,21 @@ export function CertificationHub() {
     setIsSearching(true)
 
     try {
-      const prompt = window.spark.llmPrompt`Search for ${searchProvider} cloud certifications related to: "${searchQuery}"
+      await new Promise((resolve) => setTimeout(resolve, 500))
 
-Find up to 5 relevant certifications that match this search query. For each certification provide:
-- id: certification code (e.g., AZ-900, AWS-SAA)
-- name: full official name
-- provider: "${searchProvider}"
-- level: "Foundational", "Associate", "Professional", "Expert", or "Specialty"
-- description: concise 1-2 sentence description (max 150 chars)
-- studyGuideUrl: official URL to study guide or certification page
+      const normalizedQuery = searchQuery.toLowerCase().trim()
+      const results = MOCK_CERTIFICATIONS.filter((cert) => {
+        if (cert.provider !== searchProvider) return false
+        return (
+          cert.id.toLowerCase().includes(normalizedQuery) ||
+          cert.name.toLowerCase().includes(normalizedQuery) ||
+          cert.description.toLowerCase().includes(normalizedQuery) ||
+          cert.level.toLowerCase().includes(normalizedQuery)
+        )
+      })
 
-Return ONLY valid JSON. No markdown, no extra text.
-
-Format:
-{"certifications":[{"id":"AZ-900","name":"Microsoft Certified: Azure Fundamentals","provider":"${searchProvider}","level":"Foundational","description":"Validates foundational cloud knowledge and Azure services.","studyGuideUrl":"https://learn.microsoft.com/certifications/azure-fundamentals/"}]}`
-
-      const result = await window.spark.llm(prompt, 'gpt-4o', true)
-      const parsed = JSON.parse(result)
-
-      if (parsed.certifications && Array.isArray(parsed.certifications)) {
-        setSearchResults(parsed.certifications.slice(0, 5))
-        toast.success(`Found ${parsed.certifications.length} certification(s)`)
-      } else {
-        throw new Error('Invalid response format')
-      }
+      setSearchResults(results.slice(0, 5))
+      toast.success(`Found ${results.length} certification(s)`)
     } catch (err) {
       toast.error('Search failed. Please try again.')
       console.error(err)
@@ -71,27 +124,24 @@ Format:
   }
 
   const handleSelectCertification = (cert: Certification) => {
-    setSavedCertifications((current) => {
-      const currentList = current || []
-      const exists = currentList.some((c) => c.id === cert.id)
-      if (exists) {
-        toast.info('Certification already saved')
-        return currentList
-      }
-      toast.success(`${cert.name} saved!`)
-      return [...currentList, cert]
-    })
+    const exists = savedCertifications.some((c) => c.id === cert.id)
+    if (exists) {
+      toast.info('Certification already saved')
+      return
+    }
+    setSavedCertifications([...savedCertifications, cert])
+    toast.success(`${cert.name} saved!`)
   }
 
   const filteredSavedCertifications =
     activeFilter === 'All'
-      ? savedCertifications || []
-      : (savedCertifications || []).filter((cert) => cert.provider === activeFilter)
+      ? savedCertifications
+      : savedCertifications.filter((cert) => cert.provider === activeFilter)
 
   const counts = {
-    all: savedCertifications?.length || 0,
-    microsoft: (savedCertifications || []).filter((c) => c.provider === 'Microsoft').length,
-    aws: (savedCertifications || []).filter((c) => c.provider === 'AWS').length,
+    all: savedCertifications.length,
+    microsoft: savedCertifications.filter((c) => c.provider === 'Microsoft').length,
+    aws: savedCertifications.filter((c) => c.provider === 'AWS').length,
   }
 
   const getLevelColor = (level: string) => {

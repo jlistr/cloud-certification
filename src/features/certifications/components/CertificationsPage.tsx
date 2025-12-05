@@ -1,15 +1,15 @@
-import { useState } from 'react'
 import { Certificate } from '@phosphor-icons/react'
 import { useCertificationsStore } from '../hooks/useCertificationsStore'
-import { useCertificationSearch } from '../hooks/useCertificationSearch'
+import { CertificationGrid } from './CertificationGrid'
+import { Toaster } from '@/components/ui/sonner'
+import { CertificationSkeleton } from '@/components/CertificationSkeleton'
 
 export function CertificationsPage() {
-  const { certifications, addCertification, updateCertification, isLoading, refresh } = useCertificationsStore()
-  const { results, isLoading: searchLoading, error, search } = useCertificationSearch()
-  const [activeFilter, setActiveFilter] = useState<'All' | 'Microsoft' | 'AWS'>('All')
+  const { certifications, isLoading } = useCertificationsStore()
 
   return (
     <div className="min-h-screen bg-background">
+      <Toaster />
       <div className="container mx-auto px-4 py-12 max-w-7xl">
         <header className="text-center mb-12">
           <div className="flex items-center justify-center gap-3 mb-4">
@@ -26,6 +26,16 @@ export function CertificationsPage() {
             the right certification for your career path.
           </p>
         </header>
+
+        {isLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <CertificationSkeleton key={i} />
+            ))}
+          </div>
+        ) : (
+          <CertificationGrid certifications={certifications} />
+        )}
       </div>
     </div>
   )
