@@ -26,12 +26,12 @@ This is a content showcase app with filtering functionality and LLM-powered data
 - **Progression**: Data ready → Map certifications to card components → Render in CSS grid → Animate on appearance
 - **Success criteria**: Cards are visually distinct, readable, and adapt to screen sizes
 
-### Provider Filtering
-- **Functionality**: Filter certifications by provider (All, Microsoft, AWS)
-- **Purpose**: Helps users focus on certifications from their preferred cloud platform
-- **Trigger**: User clicks filter button
-- **Progression**: User selects filter → Update active filter state → Re-render grid with filtered certifications → Show count of visible items
-- **Success criteria**: Filtering is instant, visual feedback shows active filter, grid updates smoothly
+### Provider Filtering & Enhanced Search
+- **Functionality**: Filter certifications by provider (All, Microsoft, AWS) with integrated search by name, code, or tier
+- **Purpose**: Helps users focus on certifications from their preferred cloud platform and find specific certifications quickly
+- **Trigger**: User selects provider from dropdown and/or enters search term, then clicks search button or presses Enter key
+- **Progression**: User selects provider → Enters search term (name, code like AZ-900, or tier) → Validates minimum 2 characters → Triggers search via button or Enter key → Updates filtered results → Shows toast notification
+- **Success criteria**: Filtering is instant, provider dropdown is accessible, search validates input, Enter key and button both trigger search, visual feedback shows active search state
 
 ### Certification Details
 - **Functionality**: Each card displays certification name, provider, level, description, and study guide link
@@ -47,6 +47,9 @@ This is a content showcase app with filtering functionality and LLM-powered data
 - **Missing Study Guide Links**: Display "Study guide coming soon" if a certification lacks a guide URL
 - **Long Certification Names**: Truncate or wrap text appropriately to maintain card layout
 - **Slow LLM Response**: Show loading skeleton cards while data is being generated
+- **Invalid Search Terms**: Validate search input requires minimum 2 characters with inline error message
+- **Empty Search Query**: Allow empty search to show all results (filtered by provider if selected)
+- **Keyboard Navigation**: Support Enter key to trigger search without clicking button
 
 ## Design Direction
 
@@ -96,29 +99,40 @@ Animations should be subtle and functional, reinforcing the professional tone wh
 - **Components**:
   - **Card**: Primary container for each certification (custom shadow and hover effects)
   - **Badge**: For certification levels (Foundational, Associate, Expert, Specialty)
-  - **Button**: Filter controls with active state styling
+  - **Button**: Filter controls and search button with active state styling
+  - **Select**: Provider dropdown for filtering (Microsoft, AWS, All Providers)
+  - **Input**: Search input field with validation and keyboard support
   - **Skeleton**: Loading placeholders during LLM data generation
   - **Alert**: Error messages if data generation fails
   - **Separator**: Visual dividers between card sections
+  - **Toast**: Success/info notifications for search actions
   
 - **Customizations**:
   - Custom gradient backgrounds for different provider cards (subtle blue tint for Microsoft, orange tint for AWS)
   - Badge variants for certification levels with color coding (green for foundational, blue for associate, purple for expert)
   - Card hover effect with smooth shadow and transform
-  - Filter button group with pill-style active states
+  - Integrated search bar with provider dropdown, input validation, and dual trigger (button + Enter key)
+  - Search button with icon-only design for clean interface
+  - Clear button appears when search has text
+  - Inline validation messages for search input
+  - Helper text showing search term examples (codes, names, tiers)
   
 - **States**:
   - Buttons: Default (neutral), Active (primary color with bold text), Hover (subtle background), Disabled (reduced opacity)
   - Cards: Default (elevated shadow), Hover (lifted with enhanced shadow), Loading (skeleton with pulse)
   - Links: Default (accent color), Hover (darker accent), Visited (muted accent)
+  - Search Input: Default (white background), Focus (ring border), Error (destructive border with message), Disabled (reduced opacity)
+  - Select Dropdown: Closed (chevron down), Open (content visible), Selected (checkmark indicator)
   
 - **Icon Selection**:
-  - **MagnifyingGlass**: Search/filter representation
+  - **MagnifyingGlass**: Search button and filter representation
+  - **X**: Clear search input button
   - **Certificate**: App branding and certification indicator
   - **ArrowSquareOut**: External study guide links
   - **FunnelSimple**: Filter controls
   - **CloudArrowDown**: Microsoft Azure representation
   - **AmazonLogo**: AWS representation
+  - **ChevronDown/Up**: Select dropdown indicators
   
 - **Spacing**:
   - Card padding: p-6 (24px)

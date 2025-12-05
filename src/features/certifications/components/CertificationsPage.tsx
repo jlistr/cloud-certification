@@ -1,26 +1,50 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import { Certificate } from '@phosphor-icons/react'
 import { useCertificationsStore } from '../hooks/useCertificationsStore'
 import { CertificationGrid } from './CertificationGrid'
-import { SearchBar } from './SearchBar'
-import { CertificationSkeleton } from './CertificationSkeleton'
+import { SearchBar } from '../../../components/SearchBar'
+import { CertificationSkeleton } from '../../../components/CertificationSkeleton'
 import { Toaster } from '@/components/ui/sonner'
+import { CertificationProvider } from '@/lib/types'
+import { toast } from 'sonner'
 
 export function CertificationsPage() {
   const { certifications, isLoading } = useCertificationsStore()
   const [searchQuery, setSearchQuery] = useState('')
+  const [activeProvider, setActiveProvider] = useState<CertificationProvider | 'All'>('All')
 
   const filteredCertifications = useMemo(() => {
-    if (!searchQuery.trim()) return certifications
+    let filtered = certifications
 
-    const query = searchQuery.toLowerCase()
-    return certifications.filter(cert => 
-      cert.name.toLowerCase().includes(query) ||
-      cert.provider.toLowerCase().includes(query) ||
-      cert.level.toLowerCase().includes(query) ||
-      cert.description.toLowerCase().includes(query)
-    )
-  }, [certifications, searchQuery])
+    if (activeProvider !== 'All') {
+      filtered = filtered.filter(cert => cert.provider === activeProvider)
+    }
+
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase()
+      filtered = filtered.filter(cert => {
+        const nameMatch = cert.name.toLowerCase().includes(query)
+        const providerMatch = cert.provider.toLowerCase().includes(query)
+        const levelMatch = cert.level.toLowerCase().includes(query)
+        const descriptionMatch = cert.description.toLowerCase().includes(query)
+        
+        const codeMatch = cert.id.toLowerCase().includes(query)
+        
+        return nameMatch || providerMatch || levelMatch || descriptionMatch || codeMatch
+      })
+    }
+
+    return filtered
+  }, [certifications, searchQuery, activeProvider])
+
+  const handleSearch = useCallback((query: string, provider: CertificationProvider | 'All') => {
+    setSearchQuery(query)
+    setActiveProvider(provider)
+    
+    if (query.trim()) {
+      toast.success(`Searching for "${query}" ${provider !== 'All' ? `in ${provider}` : ''}`)
+    }
+  }, [])
 
   return (
     <div className="min-h-screen bg-background">
@@ -44,7 +68,8 @@ export function CertificationsPage() {
           <SearchBar 
             value={searchQuery} 
             onChange={setSearchQuery}
-            placeholder="Search by name, provider, level, or description..."
+            onSearch={handleSearch}
+            placeholder="Search by name, code, or tier..."
           />
         </header>
 
