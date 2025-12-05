@@ -13,16 +13,27 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: 'npm'
+
+      - name: Choose install command
+        id: lockcheck
+        run: |
+          if [ -f package-lock.json ]; then
+            echo "cmd=ci" >> $GITHUB_OUTPUT
+          else
+            echo "cmd=install" >> $GITHUB_OUTPUT
+          fi
 
       - name: Install deps
-        run: npm ci
+        run: npm ${{ steps.lockcheck.outputs.cmd }}
+
+      - name: Check required envs
+        run: |
+          test -n "${{ secrets.VITE_SUPABASE_ANON_KEY }}" || (echo "Missing VITE_SUPABASE_ANON_KEY" && exit 1)
+          test -n "${{ vars.VITE_SUPABASE_URL }}" || (echo "Missing VITE_SUPABASE_URL (or set as secret)" && exit 1)
 
       - name: Build Vite app
         env:
           VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}         # or ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
         run: npm run build
-
-      # If you deploy somewhere, add that step here (e.g., to Pages or another host)
-      # - name: Upload artifact / Deploy
-      #   run: <deploy command>
