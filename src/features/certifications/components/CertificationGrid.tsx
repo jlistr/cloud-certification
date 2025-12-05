@@ -19,7 +19,7 @@ export function CertificationGrid({
   if (certifications.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-muted-foreground">No certifications found.</p>
+        <p className="text-slate-500">No certifications found.</p>
       </div>
     )
   }

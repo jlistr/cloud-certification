@@ -94,22 +94,22 @@ export function CertificationsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[oklch(0.98_0.002_240)]">
+    <div className="min-h-screen bg-gray-50/50">
       <Toaster />
       <div className="container mx-auto px-4 py-8 max-w-7xl">
         <header className="mb-8 text-center">
           <div className="flex justify-center mb-3">
-            <BookOpen size={36} weight="duotone" className="text-[oklch(0.50_0.15_240)]" />
+            <BookOpen size={36} weight="duotone" className="text-blue-500" />
           </div>
-          <h1 className="text-3xl font-bold text-foreground mb-2">
+          <h1 className="text-3xl font-semibold tracking-tight text-slate-900 mb-2">
             Cloud Certification Hub
           </h1>
-          <p className="text-muted-foreground text-base max-w-3xl mx-auto">
+          <p className="text-slate-500 text-base max-w-3xl mx-auto">
             Discover and explore popular cloud certifications from Microsoft Azure and AWS. Find the right certification for your career path.
           </p>
         </header>
 
-        <Card className="p-6 mb-8 bg-white border border-[oklch(0.90_0.005_240)]">
+        <Card className="p-6 mb-8 bg-white border border-slate-200 shadow-sm">
           <div className="mb-4">
             <SearchBar 
               value={searchQuery} 
@@ -118,8 +118,8 @@ export function CertificationsPage() {
             />
           </div>
 
-          <div className="flex items-center justify-between pt-4 border-t border-[oklch(0.93_0.005_240)]">
-            <p className="text-sm text-muted-foreground">
+          <div className="flex items-center justify-between pt-4 border-t border-slate-100">
+            <p className="text-sm text-slate-500">
               Showing {filteredCertifications.length} of {certifications.length} certifications
             </p>
             
@@ -128,7 +128,7 @@ export function CertificationsPage() {
                 variant={viewMode === 'grid' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setViewMode('grid')}
-                className="gap-2"
+                className={viewMode === 'grid' ? 'bg-slate-900 text-white hover:bg-slate-800 gap-2' : 'text-slate-600 hover:bg-slate-100 gap-2'}
               >
                 <SquaresFour size={18} weight="bold" />
                 Grid
@@ -137,7 +137,7 @@ export function CertificationsPage() {
                 variant={viewMode === 'list' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setViewMode('list')}
-                className="gap-2"
+                className={viewMode === 'list' ? 'bg-slate-900 text-white hover:bg-slate-800 gap-2' : 'text-slate-600 hover:bg-slate-100 gap-2'}
               >
                 <List size={18} weight="bold" />
                 List
@@ -163,7 +163,7 @@ export function CertificationsPage() {
             />
             {filteredCertifications.length === 0 && searchQuery && (
               <div className="text-center py-12">
-                <p className="text-muted-foreground text-lg">
+                <p className="text-slate-500 text-lg">
                   No certifications found matching "{searchQuery}"
                 </p>
               </div>

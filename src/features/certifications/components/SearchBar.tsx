@@ -41,7 +41,7 @@ export function SearchBar({
       <div className="relative flex-1">
         <MagnifyingGlass 
           size={20} 
-          className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+          className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
         />
         <Input
           type="text"
@@ -49,13 +49,13 @@ export function SearchBar({
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          className="pl-10 pr-4 h-11 bg-background"
+          className="pl-10 pr-4 h-10 bg-white border-slate-200"
           id="certification-search"
         />
       </div>
 
       <Select value={provider} onValueChange={(val) => setProvider(val as CertificationProvider | 'All')}>
-        <SelectTrigger className="w-[160px] h-11 bg-background">
+        <SelectTrigger className="w-[160px] h-10 bg-white border-none shadow-none hover:bg-slate-50 focus:ring-0">
           <SelectValue placeholder="All Providers" />
         </SelectTrigger>
         <SelectContent>
@@ -66,10 +66,10 @@ export function SearchBar({
       </Select>
 
       <button
-        className="h-11 w-11 flex items-center justify-center rounded-full bg-muted hover:bg-muted/80 transition-colors"
+        className="h-10 w-10 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 transition-colors border border-slate-200"
         aria-label="Search info"
       >
-        <Info size={20} className="text-muted-foreground" />
+        <Info size={20} className="text-slate-400 hover:text-slate-600" />
       </button>
     </div>
   )

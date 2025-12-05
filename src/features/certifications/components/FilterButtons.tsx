@@ -25,7 +25,7 @@ export function FilterButtons({ activeFilter, onFilterChange, counts }: FilterBu
           key={filter.value}
           variant={activeFilter === filter.value ? 'default' : 'outline'}
           onClick={() => onFilterChange(filter.value)}
-          className="transition-all duration-200 active:scale-95"
+          className={activeFilter === filter.value ? 'bg-slate-900 text-white hover:bg-slate-800 transition-all duration-200 active:scale-95' : 'border-slate-200 text-slate-600 hover:bg-slate-100 transition-all duration-200 active:scale-95'}
         >
           {filter.label}
           <span className="ml-2 text-xs opacity-80">({filter.count})</span>

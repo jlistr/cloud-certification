@@ -71,7 +71,7 @@ export function SearchBar({
     <div className="relative w-full max-w-3xl mx-auto">
       <div className="flex gap-2 items-start">
         <Select value={provider} onValueChange={(val) => setProvider(val as CertificationProvider | 'All')}>
-          <SelectTrigger className="w-[160px] h-12 bg-background border-input">
+          <SelectTrigger className="w-[160px] h-10 bg-white border-slate-200 border-none shadow-none hover:bg-slate-50 focus:ring-0">
             <SelectValue placeholder="All Providers" />
           </SelectTrigger>
           <SelectContent>
@@ -88,7 +88,7 @@ export function SearchBar({
             onChange={(e) => onChange(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder={placeholder}
-            className="h-12 pl-4 pr-20 text-base border-input"
+            className="h-10 pl-4 pr-20 text-base md:text-sm border-slate-200 rounded-md"
             id="certification-search"
             aria-label="Search certifications"
             aria-invalid={!!searchError}
@@ -100,7 +100,7 @@ export function SearchBar({
                 variant="ghost"
                 size="sm"
                 onClick={handleClear}
-                className="h-9 w-9 p-0 hover:bg-muted"
+                className="h-9 w-9 p-0 hover:bg-slate-50 text-slate-400"
                 aria-label="Clear search"
               >
                 <X size={16} />
@@ -110,7 +110,7 @@ export function SearchBar({
               variant="default"
               size="sm"
               onClick={handleSearch}
-              className="h-9 w-9 p-0"
+              className="h-9 w-9 p-0 bg-slate-900 hover:bg-slate-800"
               aria-label="Search"
               disabled={!!searchError && !!value}
             >
@@ -130,7 +130,7 @@ export function SearchBar({
         </p>
       )}
       
-      <p className="text-muted-foreground text-xs mt-3 ml-[168px]">
+      <p className="text-slate-500 text-xs mt-3 ml-[168px]">
         Search by certification name, code (e.g., AZ-900, AWS-SAA), or tier (Foundational, Associate, Expert)
       </p>
     </div>
