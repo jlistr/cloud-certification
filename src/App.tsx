@@ -21,61 +21,55 @@ function App() {
     setError(null)
 
     try {
-      const prompt = (window.spark.llmPrompt as any)`You are a cloud certification expert. Generate a comprehensive list of popular cloud certifications.
+      const prompt = (window.spark.llmPrompt as any)`Generate a JSON list of 12 cloud certifications (6 Microsoft Azure, 6 AWS).
 
-Create exactly 12 certifications total: 6 Microsoft Azure certifications and 6 AWS certifications.
+Microsoft: AZ-900, AZ-104, AZ-305, AZ-500, AZ-204, DP-203
+AWS: Cloud Practitioner, Solutions Architect Associate, Developer Associate, Solutions Architect Professional, Security Specialty, Data Analytics Specialty
 
-For Microsoft certifications, include:
-- Azure Fundamentals (AZ-900)
-- Azure Administrator Associate (AZ-104)
-- Azure Solutions Architect Expert (AZ-305)
-- Azure Security Engineer Associate (AZ-500)
-- Azure Developer Associate (AZ-204)
-- Azure Data Engineer Associate (DP-203)
+For each certification provide:
+- id: certification code
+- name: full official name
+- provider: "Microsoft" or "AWS"
+- level: "Foundational", "Associate", "Professional", "Expert", or "Specialty"
+- description: concise 1-2 sentence description (max 150 chars)
+- studyGuideUrl: official URL
 
-For AWS certifications, include:
-- AWS Certified Cloud Practitioner
-- AWS Certified Solutions Architect - Associate
-- AWS Certified Developer - Associate
-- AWS Certified Solutions Architect - Professional
-- AWS Certified Security - Specialty
-- AWS Certified Data Analytics - Specialty
-
-For each certification, provide:
-- A unique ID (use certification code where applicable)
-- Full official name
-- Provider (either "Microsoft" or "AWS")
-- Level (one of: "Foundational", "Associate", "Professional", "Expert", or "Specialty")
-- A detailed 2-3 sentence description explaining what the certification covers and who it is for. IMPORTANT: Ensure descriptions are properly escaped for JSON.
-- A realistic study guide URL (use official Microsoft Learn or AWS Training URLs)
-
-CRITICAL: Return ONLY valid JSON. Ensure all strings are properly escaped (especially quotes and newlines in descriptions).
-
-Return the result as valid JSON with a single property called "certifications" that contains an array of certification objects.
+Return ONLY valid JSON. Keep descriptions brief. No markdown, no extra text.
 
 Format:
-{
-  "certifications": [
-    {
-      "id": "AZ-900",
-      "name": "Microsoft Certified: Azure Fundamentals",
-      "provider": "Microsoft",
-      "level": "Foundational",
-      "description": "This certification validates foundational knowledge of cloud services and how those services are provided with Microsoft Azure. It is ideal for candidates beginning to work with cloud-based solutions.",
-      "studyGuideUrl": "https://learn.microsoft.com/en-us/certifications/azure-fundamentals/"
-    }
-  ]
-}`
+{"certifications":[{"id":"AZ-900","name":"Microsoft Certified: Azure Fundamentals","provider":"Microsoft","level":"Foundational","description":"Validates foundational cloud knowledge and Azure services.","studyGuideUrl":"https://learn.microsoft.com/certifications/azure-fundamentals/"}]}`
 
       const result = await window.spark.llm(prompt, 'gpt-4o', true)
       
       let parsed
       try {
+        // Try to parse the JSON directly
         parsed = JSON.parse(result)
       } catch (parseError) {
         console.error('JSON Parse Error:', parseError)
         console.error('Raw LLM Response:', result)
-        throw new Error('Invalid JSON response from AI')
+        
+        // Attempt to repair truncated JSON by finding the last complete object
+        try {
+          // Find the last complete certification object
+          const lastCompleteIndex = result.lastIndexOf('}')
+          if (lastCompleteIndex > 0) {
+            // Try to close the JSON array and object
+            let repairedJson = result.substring(0, lastCompleteIndex + 1)
+            if (!repairedJson.trim().endsWith(']}')) {
+              repairedJson += ']}'
+            } else if (!repairedJson.trim().endsWith('}')) {
+              repairedJson += '}'
+            }
+            parsed = JSON.parse(repairedJson)
+            console.log('Successfully repaired truncated JSON')
+          } else {
+            throw new Error('Could not repair JSON')
+          }
+        } catch (repairError) {
+          console.error('Failed to repair JSON:', repairError)
+          throw new Error('Invalid JSON response from AI')
+        }
       }
 
       if (parsed.certifications && Array.isArray(parsed.certifications)) {
