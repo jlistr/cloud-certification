@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { SquaresFour, List } from '@phosphor-icons/react'
+import { SquaresFour, List, BookOpen } from '@phosphor-icons/react'
 import { useCertificationsStore } from '../hooks/useCertificationsStore'
 import { CertificationGrid } from './CertificationGrid'
 import { SearchBar } from './SearchBar'
@@ -37,34 +37,25 @@ export function CertificationsPage() {
     <div className="min-h-screen bg-background">
       <Toaster />
       <div className="container mx-auto px-4 py-8 max-w-7xl">
-        <header className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">
-            Certification Viewer
-          </h1>
-          <p className="text-muted-foreground text-base">
-            Browse popular AWS and Microsoft certifications to advance your cloud career.
+        <header className="mb-8 text-center">
+          <div className="flex justify-center mb-3">
+            <BookOpen size={32} weight="duotone" className="text-[#3b82f6]" />
+          </div>
+          <h2 className="text-2xl font-semibold text-foreground mb-2">
+            Cloud Certification Hub
+          </h2>
+          <p className="text-muted-foreground text-base max-w-3xl mx-auto">
+            Discover and explore popular cloud certifications from Microsoft Azure and AWS. Find the right certification for your career path.
           </p>
         </header>
 
         <Card className="p-6 mb-6">
-          <div className="flex items-start gap-4 mb-4">
-            <div className="flex-shrink-0 mt-1">
-              <SquaresFour size={24} weight="duotone" className="text-foreground" />
-            </div>
-            <div className="flex-1">
-              <h2 className="text-lg font-semibold text-foreground mb-1">
-                Cloud Certification Hub
-              </h2>
-              <p className="text-sm text-muted-foreground mb-4">
-                Find the right certification for your career path. Search by name, code, or filter by provider.
-              </p>
-              
-              <SearchBar 
-                value={searchQuery} 
-                onChange={setSearchQuery}
-                placeholder="Search certifications (e.g. SAA-C03, Azure)..."
-              />
-            </div>
+          <div className="mb-4">
+            <SearchBar 
+              value={searchQuery} 
+              onChange={setSearchQuery}
+              placeholder="Search certifications (e.g. SAA-C03, Azure)..."
+            />
           </div>
 
           <div className="flex items-center justify-between pt-4 border-t">
