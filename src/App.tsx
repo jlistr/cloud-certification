@@ -21,7 +21,7 @@ function App() {
     setError(null)
 
     try {
-      const promptText = `You are a cloud certification expert. Generate a comprehensive list of popular cloud certifications.
+      const prompt = window.spark.llmPrompt`You are a cloud certification expert. Generate a comprehensive list of popular cloud certifications.
 
 Create exactly 12 certifications total: 6 Microsoft Azure certifications and 6 AWS certifications.
 
@@ -65,7 +65,7 @@ Format:
   ]
 }`
 
-      const result = await window.spark.llm(promptText, 'gpt-4o', true)
+      const result = await window.spark.llm(prompt, 'gpt-4o', true)
       const parsed = JSON.parse(result)
 
       if (parsed.certifications && Array.isArray(parsed.certifications)) {
