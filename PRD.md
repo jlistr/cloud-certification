@@ -1,53 +1,136 @@
 # Planning Guide
 
-A web application that aggregates and displays cloud certification information for Microsoft and AWS, helping IT professionals discover certifications and their associated study materials.
+A clean, professional web application for browsing AWS and Microsoft cloud certifications, featuring detailed certification information including exam duration, questions, and passing scores.
 
 **Experience Qualities**:
-1. **Informative** - Users should quickly understand each certification's purpose, level, and how to prepare for it
-2. **Organized** - Certifications should be clearly categorized and easily filterable to help users find relevant credentials
-3. **Professional** - The interface should reflect the serious, career-focused nature of professional certifications
+1. **Clean** - Simple, uncluttered interface that puts certification information front and center
+2. **Informative** - Users quickly see all relevant exam details including duration, question count, and passing scores
+3. **Professional** - Modern card-based layout that reflects the serious, career-focused nature of professional certifications
 
 **Complexity Level**: Light Application (multiple features with basic state)
-This is a content showcase app with filtering functionality and LLM-powered data generation. It features multiple views (grid layout), filtering controls, and persistent state, but doesn't require complex workflows or multi-page navigation.
+This is a content showcase app with search functionality and view toggling. It features a clean card layout with detailed exam statistics, search filtering, and view mode options (grid/list).
 
 ## Essential Features
 
-### Certification Data Generation
-- **Functionality**: Uses Spark LLM API to generate comprehensive certification data for Microsoft and AWS
-- **Purpose**: Provides users with up-to-date certification information without manual data entry
-- **Trigger**: Automatically on initial app load if no cached data exists
-- **Progression**: App loads → Check for cached certifications → If none, generate via LLM → Parse JSON response → Store in persistent state → Display in grid
-- **Success criteria**: Certifications display with name, level, description, and study guide links
+### Certification Display
+- **Functionality**: Displays certification cards with comprehensive exam details in a clean white card layout
+- **Purpose**: Provides users with complete certification information at a glance
+- **Trigger**: App loads with default certification data
+- **Progression**: App loads → Display certifications in grid → Show provider icons, badges, stats, and exam guide links
+- **Success criteria**: All certifications display with provider, level badge, code, name, description, duration, questions, pass score, and exam guide button
 
-### Grid Display
-- **Functionality**: Displays certification cards in a responsive grid layout
-- **Purpose**: Allows users to scan multiple certifications at once and compare options
-- **Trigger**: After data is loaded or filtering is applied
-- **Progression**: Data ready → Map certifications to card components → Render in CSS grid → Animate on appearance
-- **Success criteria**: Cards are visually distinct, readable, and adapt to screen sizes
+### Search & Filtering
+- **Functionality**: Search bar with provider dropdown and info icon for finding specific certifications
+- **Purpose**: Helps users quickly find certifications by name, code, or filter by provider
+- **Trigger**: User types in search field or selects provider from dropdown
+- **Progression**: User enters search term → Filter updates in real-time → Result count updates → Grid refreshes with filtered results
+- **Success criteria**: Search is instant, provider dropdown works, result count is accurate
 
-### Provider Filtering & Enhanced Search
-- **Functionality**: Filter certifications by provider (All, Microsoft, AWS) with integrated search by name, code, or tier
-- **Purpose**: Helps users focus on certifications from their preferred cloud platform and find specific certifications quickly
-- **Trigger**: User selects provider from dropdown and/or enters search term, then clicks search button or presses Enter key
-- **Progression**: User selects provider → Enters search term (name, code like AZ-900, or tier) → Validates minimum 2 characters → Triggers search via button or Enter key → Updates filtered results → Shows toast notification
-- **Success criteria**: Filtering is instant, provider dropdown is accessible, search validates input, Enter key and button both trigger search, visual feedback shows active search state
+### View Mode Toggle
+- **Functionality**: Toggle between Grid and List view modes
+- **Purpose**: Allows users to choose their preferred viewing layout
+- **Trigger**: User clicks Grid or List button
+- **Progression**: User clicks view button → Active button highlights → Layout updates (future enhancement for list view)
+- **Success criteria**: Grid button is active by default, both buttons are clearly styled
 
-### Certification Details
-- **Functionality**: Each card displays certification name, provider, level, description, and study guide link
-- **Purpose**: Gives users all essential information to decide if a certification is right for them
-- **Trigger**: Data loads into card components
-- **Progression**: Certification data → Card receives props → Render badge for level → Display formatted description → Include external link to study materials
-- **Success criteria**: All information is legible, links work, badges are color-coded
+### Exam Statistics
+- **Functionality**: Each card displays duration (minutes), number of questions, and passing score
+- **Purpose**: Gives users concrete exam expectations
+- **Trigger**: Cards render with certification data
+- **Progression**: Card renders → Stats section displays three columns → Each stat shows label and value
+- **Success criteria**: All three stats are clearly visible and properly formatted
 
 ## Edge Case Handling
 
-- **LLM Generation Failure**: Display error message with retry button if certification data fails to generate
-- **Empty Filter Results**: Show "No certifications found" message when filter returns zero results
-- **Missing Study Guide Links**: Display "Study guide coming soon" if a certification lacks a guide URL
-- **Long Certification Names**: Truncate or wrap text appropriately to maintain card layout
-- **Slow LLM Response**: Show loading skeleton cards while data is being generated
-- **Invalid Search Terms**: Validate search input requires minimum 2 characters with inline error message
+- **Empty Search Results**: Show "No certifications found" message when search returns zero results
+- **Missing Exam Statistics**: Handle certifications that may not have duration, questions, or pass score data
+- **Long Certification Names**: Text wraps appropriately within card boundaries
+- **Missing Study Guide Links**: All certifications have valid exam guide URLs
+
+## Design Direction
+
+The design should evoke **clarity, simplicity, and professionalism**. Clean white cards on a light gray background, with provider-specific colors (orange for AWS, blue for Azure/Microsoft), clear typography hierarchy, and comprehensive exam information displayed in an organized manner.
+
+## Color Selection
+
+A minimal, clean palette focused on readability and provider brand colors:
+
+- **Background**: Light Gray (oklch(0.98 0.002 240)) - Clean, neutral canvas
+- **Card**: Pure White (oklch(1.00 0 0)) - Maximum contrast for content
+- **Primary Text**: Dark Gray (oklch(0.15 0.005 240)) - Excellent readability
+- **Muted Text**: Medium Gray (oklch(0.50 0.01 240)) - Secondary information
+- **AWS Orange**: (oklch(0.65 0.15 40)) - AWS branding
+- **Azure Blue**: (oklch(0.45 0.12 240)) - Microsoft/Azure branding
+- **Foundational Badge**: Emerald (emerald-50 bg, emerald-700 text) - Entry-level certifications
+- **Associate Badge**: Blue (blue-50 bg, blue-700 text) - Mid-level certifications
+
+## Font Selection
+
+Clean, modern sans-serif focused on readability:
+
+- **Primary Font**: Inter - Excellent for UI and body text, highly legible
+- **Hierarchy**:
+  - Page Title: Inter Bold/30px
+  - Card Titles: Inter SemiBold/16px
+  - Body Text: Inter Regular/14px
+  - Labels/Badges: Inter Medium/12px
+  - Stats Labels: Inter Regular/11px uppercase
+
+## Animations
+
+Minimal, functional animations that enhance usability:
+
+- **Card Entry**: Subtle fade-up (0.3s) with staggered delay (50ms between cards)
+- **Hover States**: Gentle shadow elevation on card hover
+- **Button States**: Quick color transitions (200ms)
+- **View Toggle**: Instant feedback on active state
+
+## Component Selection
+
+- **Components**:
+  - **Card**: White background, subtle border, contains all certification information
+  - **Badge**: For certification levels (Foundational, Associate, etc.)
+  - **Button**: View toggle (Grid/List), Exam Guide link
+  - **Input**: Search field with icon
+  - **Select**: Provider dropdown (All Providers, Microsoft, AWS)
+  - **Icons**: Phosphor Icons for provider logos, search, info, grid/list, external link
+  
+- **Customizations**:
+  - Cards have clean white background with subtle border
+  - Provider icons and names at top (AWS with orange, Azure with blue)
+  - Level badges in top-right corner with appropriate colors
+  - Three-column stats grid showing Duration, Questions, Pass Score
+  - Exam Guide button with book icon and external link icon
+  - Search bar with search icon on left, provider dropdown, and info icon
+  - View toggle buttons showing Grid/List with active state
+  - Result count display "Showing X of Y certifications"
+  
+- **States**:
+  - Cards: Default (white with border), Hover (elevated shadow)
+  - Buttons: Default (outlined), Active (filled), Hover (background change)
+  - Search: Default (white), Focus (ring border)
+  
+- **Icon Selection**:
+  - **MagnifyingGlass**: Search functionality
+  - **Info**: Information/help icon
+  - **SquaresFour**: Grid view icon
+  - **List**: List view icon
+  - **AmazonLogo**: AWS provider icon
+  - **Cloud**: Azure provider icon
+  - **BookOpen**: Exam guide icon
+  - **ArrowSquareOut**: External link indicator
+  
+- **Spacing**:
+  - Card padding: p-6 (24px)
+  - Grid gap: gap-6 (24px)
+  - Container padding: px-4 py-8
+  - Stats grid: gap-4 (16px)
+  
+- **Mobile**:
+  - Grid: 1 column on mobile, 2 on tablet, 3 on desktop
+  - Search bar: Full width, elements stack if needed
+  - Cards: Full width with adjusted padding
+  - View toggle: Remains horizontal, smaller buttons
 - **Empty Search Query**: Allow empty search to show all results (filtered by provider if selected)
 - **Keyboard Navigation**: Support Enter key to trigger search without clicking button
 

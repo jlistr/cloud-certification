@@ -4,100 +4,59 @@ import { Certification } from '../types'
 
 const DEFAULT_CERTIFICATIONS: Certification[] = [
   {
-    id: 'AZ-900',
-    name: 'Microsoft Certified: Azure Fundamentals',
-    provider: 'Microsoft',
-    level: 'Foundational',
-    description: 'Validates foundational knowledge of cloud services and how those services are provided with Microsoft Azure.',
-    studyGuideUrl: 'https://learn.microsoft.com/certifications/azure-fundamentals/'
-  },
-  {
-    id: 'AZ-104',
-    name: 'Microsoft Certified: Azure Administrator Associate',
-    provider: 'Microsoft',
-    level: 'Associate',
-    description: 'Validates skills in implementing, managing, and monitoring an organization\'s Microsoft Azure environment.',
-    studyGuideUrl: 'https://learn.microsoft.com/certifications/azure-administrator/'
-  },
-  {
-    id: 'AZ-305',
-    name: 'Microsoft Certified: Azure Solutions Architect Expert',
-    provider: 'Microsoft',
-    level: 'Expert',
-    description: 'Validates expertise in designing cloud and hybrid solutions that run on Microsoft Azure.',
-    studyGuideUrl: 'https://learn.microsoft.com/certifications/azure-solutions-architect/'
-  },
-  {
-    id: 'AZ-500',
-    name: 'Microsoft Certified: Azure Security Engineer Associate',
-    provider: 'Microsoft',
-    level: 'Associate',
-    description: 'Validates skills in implementing security controls and threat protection on Azure.',
-    studyGuideUrl: 'https://learn.microsoft.com/certifications/azure-security-engineer/'
-  },
-  {
-    id: 'AZ-204',
-    name: 'Microsoft Certified: Azure Developer Associate',
-    provider: 'Microsoft',
-    level: 'Associate',
-    description: 'Validates skills in designing, building, testing, and maintaining cloud applications and services.',
-    studyGuideUrl: 'https://learn.microsoft.com/certifications/azure-developer/'
-  },
-  {
-    id: 'DP-203',
-    name: 'Microsoft Certified: Azure Data Engineer Associate',
-    provider: 'Microsoft',
-    level: 'Associate',
-    description: 'Validates expertise in integrating, transforming, and consolidating data from various sources.',
-    studyGuideUrl: 'https://learn.microsoft.com/certifications/azure-data-engineer/'
-  },
-  {
     id: 'CLF-C02',
     name: 'AWS Certified Cloud Practitioner',
     provider: 'AWS',
     level: 'Foundational',
-    description: 'Validates overall understanding of the AWS Cloud, independent of specific technical roles.',
-    studyGuideUrl: 'https://aws.amazon.com/certification/certified-cloud-practitioner/'
+    description: 'Validates overall understanding of the AWS Cloud platform and basic security concepts.',
+    studyGuideUrl: 'https://aws.amazon.com/certification/certified-cloud-practitioner/',
+    duration: 90,
+    questions: 65,
+    passScore: 700
   },
   {
     id: 'SAA-C03',
     name: 'AWS Certified Solutions Architect - Associate',
     provider: 'AWS',
     level: 'Associate',
-    description: 'Validates ability to design and implement distributed systems on AWS.',
-    studyGuideUrl: 'https://aws.amazon.com/certification/certified-solutions-architect-associate/'
+    description: 'Validates knowledge of designing distributed systems on AWS with scalability and reliability.',
+    studyGuideUrl: 'https://aws.amazon.com/certification/certified-solutions-architect-associate/',
+    duration: 130,
+    questions: 65,
+    passScore: 720
   },
   {
     id: 'DVA-C02',
     name: 'AWS Certified Developer - Associate',
     provider: 'AWS',
     level: 'Associate',
-    description: 'Validates proficiency in developing and maintaining AWS-based applications.',
-    studyGuideUrl: 'https://aws.amazon.com/certification/certified-developer-associate/'
+    description: 'Validates expertise in developing and maintaining AWS applications.',
+    studyGuideUrl: 'https://aws.amazon.com/certification/certified-developer-associate/',
+    duration: 130,
+    questions: 65,
+    passScore: 720
   },
   {
-    id: 'SAP-C02',
-    name: 'AWS Certified Solutions Architect - Professional',
-    provider: 'AWS',
-    level: 'Professional',
-    description: 'Validates advanced technical skills and experience in designing distributed applications on AWS.',
-    studyGuideUrl: 'https://aws.amazon.com/certification/certified-solutions-architect-professional/'
+    id: 'AZ-900',
+    name: 'Microsoft Certified: Azure Fundamentals',
+    provider: 'Microsoft',
+    level: 'Foundational',
+    description: 'Demonstrate foundational knowledge of cloud concepts and Azure services.',
+    studyGuideUrl: 'https://learn.microsoft.com/certifications/azure-fundamentals/',
+    duration: 45,
+    questions: 40,
+    passScore: 700
   },
   {
-    id: 'SCS-C02',
-    name: 'AWS Certified Security - Specialty',
-    provider: 'AWS',
-    level: 'Specialty',
-    description: 'Validates expertise in securing AWS workloads and implementing security controls.',
-    studyGuideUrl: 'https://aws.amazon.com/certification/certified-security-specialty/'
-  },
-  {
-    id: 'DAS-C01',
-    name: 'AWS Certified Data Analytics - Specialty',
-    provider: 'AWS',
-    level: 'Specialty',
-    description: 'Validates expertise in designing and implementing AWS services to derive value from data.',
-    studyGuideUrl: 'https://aws.amazon.com/certification/certified-data-analytics-specialty/'
+    id: 'AZ-104',
+    name: 'Microsoft Certified: Azure Administrator Associate',
+    provider: 'Microsoft',
+    level: 'Associate',
+    description: 'Manage cloud services that span storage, security, networking, and compute cloud capabilities.',
+    studyGuideUrl: 'https://learn.microsoft.com/certifications/azure-administrator/',
+    duration: 100,
+    questions: 60,
+    passScore: 700
   }
 ]
 

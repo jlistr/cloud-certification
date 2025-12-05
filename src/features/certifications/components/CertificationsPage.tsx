@@ -1,24 +1,21 @@
-import { useState, useMemo, useCallback } from 'react'
-import { Certificate } from '@phosphor-icons/react'
+import { useState, useMemo } from 'react'
+import { SquaresFour, List } from '@phosphor-icons/react'
 import { useCertificationsStore } from '../hooks/useCertificationsStore'
 import { CertificationGrid } from './CertificationGrid'
-import { SearchBar } from '../../../components/SearchBar'
+import { SearchBar } from './SearchBar'
 import { CertificationSkeleton } from '../../../components/CertificationSkeleton'
 import { Toaster } from '@/components/ui/sonner'
 import { CertificationProvider } from '@/lib/types'
-import { toast } from 'sonner'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 
 export function CertificationsPage() {
   const { certifications, isLoading } = useCertificationsStore()
   const [searchQuery, setSearchQuery] = useState('')
-  const [activeProvider, setActiveProvider] = useState<CertificationProvider | 'All'>('All')
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
 
   const filteredCertifications = useMemo(() => {
     let filtered = certifications
-
-    if (activeProvider !== 'All') {
-      filtered = filtered.filter(cert => cert.provider === activeProvider)
-    }
 
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase()
@@ -27,7 +24,6 @@ export function CertificationsPage() {
         const providerMatch = cert.provider.toLowerCase().includes(query)
         const levelMatch = cert.level.toLowerCase().includes(query)
         const descriptionMatch = cert.description.toLowerCase().includes(query)
-        
         const codeMatch = cert.id.toLowerCase().includes(query)
         
         return nameMatch || providerMatch || levelMatch || descriptionMatch || codeMatch
@@ -35,43 +31,69 @@ export function CertificationsPage() {
     }
 
     return filtered
-  }, [certifications, searchQuery, activeProvider])
-
-  const handleSearch = useCallback((query: string, provider: CertificationProvider | 'All') => {
-    setSearchQuery(query)
-    setActiveProvider(provider)
-    
-    if (query.trim()) {
-      toast.success(`Searching for "${query}" ${provider !== 'All' ? `in ${provider}` : ''}`)
-    }
-  }, [])
+  }, [certifications, searchQuery])
 
   return (
     <div className="min-h-screen bg-background">
       <Toaster />
-      <div className="container mx-auto px-4 py-12 max-w-7xl">
-        <header className="text-center mb-12">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <Certificate size={40} weight="bold" className="text-primary" />
-            <h1
-              className="text-4xl font-bold tracking-tight text-foreground"
-              style={{ fontFamily: 'var(--font-space)' }}
-            >
-              Cloud Certification Hub
-            </h1>
-          </div>
-          <p className="text-muted-foreground max-w-2xl mx-auto mb-8">
-            Discover and explore popular cloud certifications from Microsoft Azure and AWS. Find
-            the right certification for your career path.
+      <div className="container mx-auto px-4 py-8 max-w-7xl">
+        <header className="mb-8">
+          <h1 className="text-3xl font-bold text-foreground mb-2">
+            Certification Viewer
+          </h1>
+          <p className="text-muted-foreground text-base">
+            Browse popular AWS and Microsoft certifications to advance your cloud career.
           </p>
-          
-          <SearchBar 
-            value={searchQuery} 
-            onChange={setSearchQuery}
-            onSearch={handleSearch}
-            placeholder="Search by name, code, or tier..."
-          />
         </header>
+
+        <Card className="p-6 mb-6">
+          <div className="flex items-start gap-4 mb-4">
+            <div className="flex-shrink-0 mt-1">
+              <SquaresFour size={24} weight="duotone" className="text-foreground" />
+            </div>
+            <div className="flex-1">
+              <h2 className="text-lg font-semibold text-foreground mb-1">
+                Cloud Certification Hub
+              </h2>
+              <p className="text-sm text-muted-foreground mb-4">
+                Find the right certification for your career path. Search by name, code, or filter by provider.
+              </p>
+              
+              <SearchBar 
+                value={searchQuery} 
+                onChange={setSearchQuery}
+                placeholder="Search certifications (e.g. SAA-C03, Azure)..."
+              />
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between pt-4 border-t">
+            <p className="text-sm text-muted-foreground">
+              Showing {filteredCertifications.length} of {certifications.length} certifications
+            </p>
+            
+            <div className="flex items-center gap-2">
+              <Button
+                variant={viewMode === 'grid' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setViewMode('grid')}
+                className="gap-2"
+              >
+                <SquaresFour size={18} weight="bold" />
+                Grid
+              </Button>
+              <Button
+                variant={viewMode === 'list' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setViewMode('list')}
+                className="gap-2"
+              >
+                <List size={18} weight="bold" />
+                List
+              </Button>
+            </div>
+          </div>
+        </Card>
 
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

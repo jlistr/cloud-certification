@@ -9,6 +9,9 @@ export interface Certification {
   level: CertificationLevel
   description: string
   studyGuideUrl: string
+  duration?: number
+  questions?: number
+  passScore?: number
 }
 
 export type AnswerValue = 'A' | 'B' | 'C' | 'D'
