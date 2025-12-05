@@ -5,6 +5,7 @@ import { Certification, CertificationProvider } from '@/lib/types'
 import { CertificationCard } from '@/components/CertificationCard'
 import { FilterButtons } from '@/components/FilterButtons'
 import { CertificationSkeleton } from '@/components/CertificationSkeleton'
+import { SearchBar } from '@/components/SearchBar'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Toaster } from '@/components/ui/sonner'
@@ -15,6 +16,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [activeFilter, setActiveFilter] = useState<CertificationProvider | 'All'>('All')
+  const [searchQuery, setSearchQuery] = useState('')
 
   const generateCertifications = async () => {
     setIsLoading(true)
@@ -98,6 +100,17 @@ Format:
       ? certifications || []
       : (certifications || []).filter((cert) => cert.provider === activeFilter)
 
+  const searchFilteredCertifications = filteredCertifications.filter((cert) => {
+    if (!searchQuery) return true
+    const query = searchQuery.toLowerCase()
+    return (
+      cert.name.toLowerCase().includes(query) ||
+      cert.id.toLowerCase().includes(query) ||
+      cert.description.toLowerCase().includes(query) ||
+      cert.level.toLowerCase().includes(query)
+    )
+  })
+
   const counts = {
     all: certifications?.length || 0,
     microsoft: (certifications || []).filter((c) => c.provider === 'Microsoft').length,
@@ -137,13 +150,18 @@ Format:
         )}
 
         {!isLoading && !error && certifications && certifications.length > 0 && (
-          <div className="mb-8">
-            <FilterButtons
-              activeFilter={activeFilter}
-              onFilterChange={setActiveFilter}
-              counts={counts}
-            />
-          </div>
+          <>
+            <div className="mb-8">
+              <SearchBar value={searchQuery} onChange={setSearchQuery} />
+            </div>
+            <div className="mb-8">
+              <FilterButtons
+                activeFilter={activeFilter}
+                onFilterChange={setActiveFilter}
+                counts={counts}
+              />
+            </div>
+          </>
         )}
 
         {isLoading ? (
@@ -152,16 +170,18 @@ Format:
               <CertificationSkeleton key={i} />
             ))}
           </div>
-        ) : filteredCertifications && filteredCertifications.length > 0 ? (
+        ) : searchFilteredCertifications && searchFilteredCertifications.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredCertifications.map((cert, index) => (
+            {searchFilteredCertifications.map((cert, index) => (
               <CertificationCard key={cert.id} certification={cert} index={index} />
             ))}
           </div>
         ) : (
           !error && (
             <div className="text-center py-12">
-              <p className="text-muted-foreground">No certifications found.</p>
+              <p className="text-muted-foreground">
+                {searchQuery ? 'No certifications match your search.' : 'No certifications found.'}
+              </p>
             </div>
           )
         )}
