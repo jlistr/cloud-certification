@@ -1,11 +1,26 @@
+import { useState, useMemo } from 'react'
 import { Certificate } from '@phosphor-icons/react'
 import { useCertificationsStore } from '../hooks/useCertificationsStore'
 import { CertificationGrid } from './CertificationGrid'
+import { SearchBar } from './SearchBar'
+import { CertificationSkeleton } from './CertificationSkeleton'
 import { Toaster } from '@/components/ui/sonner'
-import { CertificationSkeleton } from '@/components/CertificationSkeleton'
 
 export function CertificationsPage() {
   const { certifications, isLoading } = useCertificationsStore()
+  const [searchQuery, setSearchQuery] = useState('')
+
+  const filteredCertifications = useMemo(() => {
+    if (!searchQuery.trim()) return certifications
+
+    const query = searchQuery.toLowerCase()
+    return certifications.filter(cert => 
+      cert.name.toLowerCase().includes(query) ||
+      cert.provider.toLowerCase().includes(query) ||
+      cert.level.toLowerCase().includes(query) ||
+      cert.description.toLowerCase().includes(query)
+    )
+  }, [certifications, searchQuery])
 
   return (
     <div className="min-h-screen bg-background">
@@ -21,10 +36,16 @@ export function CertificationsPage() {
               Cloud Certification Hub
             </h1>
           </div>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-muted-foreground max-w-2xl mx-auto mb-8">
             Discover and explore popular cloud certifications from Microsoft Azure and AWS. Find
             the right certification for your career path.
           </p>
+          
+          <SearchBar 
+            value={searchQuery} 
+            onChange={setSearchQuery}
+            placeholder="Search by name, provider, level, or description..."
+          />
         </header>
 
         {isLoading ? (
@@ -34,7 +55,16 @@ export function CertificationsPage() {
             ))}
           </div>
         ) : (
-          <CertificationGrid certifications={certifications} />
+          <>
+            <CertificationGrid certifications={filteredCertifications} />
+            {filteredCertifications.length === 0 && searchQuery && (
+              <div className="text-center py-12">
+                <p className="text-muted-foreground text-lg">
+                  No certifications found matching "{searchQuery}"
+                </p>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>
