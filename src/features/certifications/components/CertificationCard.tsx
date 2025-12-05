@@ -18,15 +18,15 @@ export function CertificationCard({ certification, index, onEdit, onDelete, onAd
   const getLevelColor = (level: string) => {
     switch (level) {
       case 'Foundational':
-        return 'bg-emerald-50 text-emerald-700 border-emerald-200'
+        return 'bg-[oklch(0.93_0.08_160)] text-[oklch(0.35_0.15_160)] border-[oklch(0.85_0.10_160)]'
       case 'Associate':
-        return 'bg-blue-50 text-blue-700 border-blue-200'
+        return 'bg-[oklch(0.93_0.08_240)] text-[oklch(0.40_0.15_240)] border-[oklch(0.85_0.10_240)]'
       case 'Professional':
-        return 'bg-blue-50 text-blue-700 border-blue-200'
+        return 'bg-[oklch(0.93_0.08_240)] text-[oklch(0.40_0.15_240)] border-[oklch(0.85_0.10_240)]'
       case 'Expert':
-        return 'bg-purple-50 text-purple-700 border-purple-200'
+        return 'bg-[oklch(0.93_0.10_300)] text-[oklch(0.40_0.18_300)] border-[oklch(0.85_0.12_300)]'
       case 'Specialty':
-        return 'bg-amber-50 text-amber-700 border-amber-200'
+        return 'bg-[oklch(0.93_0.08_60)] text-[oklch(0.40_0.15_60)] border-[oklch(0.85_0.10_60)]'
       default:
         return 'bg-gray-50 text-gray-700 border-gray-200'
     }
@@ -34,16 +34,16 @@ export function CertificationCard({ certification, index, onEdit, onDelete, onAd
 
   const getProviderIcon = (provider: string) => {
     if (provider === 'AWS') {
-      return <AmazonLogo size={20} weight="fill" className="text-orange-500" />
+      return <Cloud size={22} weight="duotone" className="text-[oklch(0.60_0.18_40)]" />
     }
-    return <Cloud size={20} weight="fill" className="text-blue-600" />
+    return <Cloud size={22} weight="duotone" className="text-[oklch(0.55_0.18_240)]" />
   }
 
   const getProviderColor = (provider: string) => {
     if (provider === 'AWS') {
-      return 'text-orange-500'
+      return 'text-[oklch(0.60_0.18_40)]'
     }
-    return 'text-blue-600'
+    return 'text-[oklch(0.55_0.18_240)]'
   }
 
   const getProviderLabel = (provider: string) => {
@@ -59,7 +59,7 @@ export function CertificationCard({ certification, index, onEdit, onDelete, onAd
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: index * 0.05 }}
     >
-      <Card className="bg-white p-6 h-full flex flex-col border border-border hover:shadow-md transition-shadow">
+      <Card className="bg-white p-6 h-full flex flex-col border border-[oklch(0.90_0.005_240)] hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
         <div className="flex items-start justify-between gap-3 mb-3">
           <div className="flex items-center gap-2">
             {getProviderIcon(certification.provider)}
@@ -77,45 +77,49 @@ export function CertificationCard({ certification, index, onEdit, onDelete, onAd
 
         <div className="mb-3">
           <p className="text-xs text-muted-foreground font-medium mb-1">{certification.id}</p>
-          <h3 className="text-base font-semibold leading-tight text-foreground">
+          <h3 className="text-lg font-bold leading-tight text-foreground">
             {certification.name}
           </h3>
         </div>
 
-        <div className="flex-1 mb-4">
+        <div className="flex-1 mb-6">
           <p className="text-sm text-muted-foreground leading-relaxed">
             {certification.description}
           </p>
         </div>
 
-        {(certification.duration || certification.questions || certification.passScore) && (
-          <div className="grid grid-cols-3 gap-4 mb-4 pb-4 border-b">
-            {certification.duration && (
-              <div>
-                <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Duration</p>
-                <p className="text-sm font-semibold text-foreground">{certification.duration} min</p>
-              </div>
-            )}
-            {certification.questions && (
-              <div>
-                <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Questions</p>
-                <p className="text-sm font-semibold text-foreground">{certification.questions}</p>
-              </div>
-            )}
-            {certification.passScore && (
-              <div>
-                <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Pass Score</p>
-                <p className="text-sm font-semibold text-foreground">{certification.passScore}</p>
-              </div>
-            )}
+        <div className="grid grid-cols-3 gap-4 mb-5 pb-5 border-b border-[oklch(0.93_0.005_240)]">
+          <div className="text-center">
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold mb-1">
+              Duration
+            </p>
+            <p className="text-base font-bold text-foreground">
+              {certification.duration ? `${certification.duration} min` : '-'}
+            </p>
           </div>
-        )}
+          <div className="text-center">
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold mb-1">
+              Questions
+            </p>
+            <p className="text-base font-bold text-foreground">
+              {certification.questions || '-'}
+            </p>
+          </div>
+          <div className="text-center">
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold mb-1">
+              Pass Score
+            </p>
+            <p className="text-base font-bold text-foreground">
+              {certification.passScore || '-'}
+            </p>
+          </div>
+        </div>
 
         <div className="flex flex-col gap-2">
           <Button
             variant="outline"
             size="sm"
-            className="gap-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 h-9 w-full"
+            className="gap-2 text-[oklch(0.50_0.15_240)] hover:text-[oklch(0.40_0.15_240)] hover:bg-[oklch(0.95_0.05_240)] h-9 w-full border-[oklch(0.90_0.005_240)]"
             onClick={() => onAddPracticeExam(certification)}
           >
             <Plus size={16} weight="bold" />
@@ -131,31 +135,36 @@ export function CertificationCard({ certification, index, onEdit, onDelete, onAd
             <Button
               variant="ghost"
               size="sm"
-              className="gap-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 px-3 h-9 flex-1"
+              className="gap-2 text-[oklch(0.50_0.15_240)] hover:text-[oklch(0.40_0.15_240)] hover:bg-[oklch(0.95_0.05_240)] px-3 h-9 flex-1 font-medium"
               onClick={() => window.open(certification.studyGuideUrl, '_blank')}
             >
-              <BookOpen size={16} weight="fill" />
+              <BookOpen size={16} weight="regular" />
               Exam Guide
-              <ArrowSquareOut weight="bold" size={14} />
             </Button>
-            <div className="flex items-center gap-1">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="gap-1 text-muted-foreground hover:text-blue-600 hover:bg-blue-50 px-2 h-9"
-                onClick={() => onEdit(certification)}
-              >
-                <PencilSimple size={16} weight="bold" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="gap-1 text-muted-foreground hover:text-destructive hover:bg-red-50 px-2 h-9"
-                onClick={() => onDelete(certification)}
-              >
-                <Trash size={16} weight="bold" />
-              </Button>
-            </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-9 w-9 text-muted-foreground hover:text-foreground"
+              onClick={() => window.open(certification.studyGuideUrl, '_blank')}
+            >
+              <ArrowSquareOut size={16} weight="regular" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-9 w-9 text-muted-foreground hover:text-[oklch(0.50_0.15_240)] hover:bg-[oklch(0.95_0.05_240)]"
+              onClick={() => onEdit(certification)}
+            >
+              <PencilSimple size={16} weight="bold" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-9 w-9 text-muted-foreground hover:text-destructive hover:bg-red-50"
+              onClick={() => onDelete(certification)}
+            >
+              <Trash size={16} weight="bold" />
+            </Button>
           </div>
         </div>
       </Card>

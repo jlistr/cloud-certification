@@ -82,20 +82,21 @@ This is a content showcase app with search functionality, view toggling, certifi
 
 ## Design Direction
 
-The design should evoke **clarity, simplicity, and professionalism**. Clean white cards on a light gray background, with provider-specific colors (orange for AWS, blue for Azure/Microsoft), clear typography hierarchy, and comprehensive exam information displayed in an organized manner.
+The design should evoke **clarity, simplicity, and professionalism**. Clean white cards on a light gray background, provider-specific colors (orange for AWS, blue for Azure/Microsoft), clear typography hierarchy, and comprehensive exam information displayed in an organized, spacious layout.
 
 ## Color Selection
 
 A minimal, clean palette focused on readability and provider brand colors:
 
-- **Background**: Light Gray (oklch(0.98 0.002 240)) - Clean, neutral canvas
+- **Background**: Very Light Gray (oklch(0.98 0.002 240)) - Clean, neutral canvas
 - **Card**: Pure White (oklch(1.00 0 0)) - Maximum contrast for content
-- **Primary Text**: Dark Gray (oklch(0.15 0.005 240)) - Excellent readability
+- **Primary Text**: Dark Gray (oklch(0.20 0.005 240)) - Excellent readability
 - **Muted Text**: Medium Gray (oklch(0.50 0.01 240)) - Secondary information
-- **AWS Orange**: (oklch(0.65 0.15 40)) - AWS branding
-- **Azure Blue**: (oklch(0.45 0.12 240)) - Microsoft/Azure branding
-- **Foundational Badge**: Emerald (emerald-50 bg, emerald-700 text) - Entry-level certifications
-- **Associate Badge**: Blue (blue-50 bg, blue-700 text) - Mid-level certifications
+- **AWS Orange**: (oklch(0.60 0.18 40)) - AWS branding for icons and text
+- **Azure Blue**: (oklch(0.55 0.18 240)) - Microsoft/Azure branding for icons and text
+- **Foundational Badge**: Emerald (oklch(0.93 0.08 160) bg, oklch(0.35 0.15 160) text) - Entry-level certifications
+- **Associate Badge**: Blue (oklch(0.93 0.08 240) bg, oklch(0.40 0.15 240) text) - Mid-level certifications
+- **Border**: Light Gray (oklch(0.90 0.005 240)) - Subtle card borders
 
 ## Font Selection
 
@@ -103,67 +104,64 @@ Clean, modern sans-serif focused on readability:
 
 - **Primary Font**: Inter - Excellent for UI and body text, highly legible
 - **Hierarchy**:
-  - Page Title: Inter Bold/30px
-  - Card Titles: Inter SemiBold/16px
+  - Page Title: Inter Bold/36px
+  - Card Titles: Inter Bold/18px
   - Body Text: Inter Regular/14px
   - Labels/Badges: Inter Medium/12px
-  - Stats Labels: Inter Regular/11px uppercase
+  - Stats Labels: Inter SemiBold/10px uppercase with wider tracking
 
 ## Animations
 
 Minimal, functional animations that enhance usability:
 
 - **Card Entry**: Subtle fade-up (0.3s) with staggered delay (50ms between cards)
-- **Hover States**: Gentle shadow elevation on card hover
+- **Hover States**: Gentle lift (-4px translateY) with shadow elevation on card hover (300ms)
 - **Button States**: Quick color transitions (200ms)
-- **View Toggle**: Instant feedback on active state
 
 ## Component Selection
 
 - **Components**:
-  - **Card**: White background, subtle border, contains all certification information
-  - **Badge**: For certification levels (Foundational, Associate, etc.)
-  - **Button**: View toggle (Grid/List), Exam Guide link
+  - **Card**: White background with subtle light gray border, rounded corners, contains all certification information
+  - **Badge**: For certification levels (Foundational, Associate, etc.) with color-coded backgrounds
+  - **Button**: "Exam Guide" with book icon, plus edit/delete icons, "Add Practice Exam" button
   - **Input**: Search field with icon
-  - **Select**: Provider dropdown (All Providers, Microsoft, AWS)
-  - **Icons**: Phosphor Icons for provider logos, search, info, grid/list, external link
+  - **Icons**: Phosphor Icons - Cloud (duotone) for providers, BookOpen for exam guide, ArrowSquareOut for external links
   
 - **Customizations**:
-  - Cards have clean white background with subtle border
-  - Provider icons and names at top (AWS with orange, Azure with blue)
-  - Level badges in top-right corner with appropriate colors
-  - Three-column stats grid showing Duration, Questions, Pass Score
-  - Exam Guide button with book icon and external link icon
-  - Search bar with search icon on left, provider dropdown, and info icon
-  - View toggle buttons showing Grid/List with active state
-  - Result count display "Showing X of Y certifications"
+  - Cards have clean white background with light gray border (oklch(0.90 0.005 240))
+  - Provider icons (Cloud duotone) colored orange for AWS, blue for Azure
+  - Provider names in matching colors next to icon at card top
+  - Level badges in top-right corner with soft pastel backgrounds and dark text
+  - Certification code displayed above title in small muted text
+  - Three-column stats grid centered with uppercase labels: DURATION, QUESTIONS, PASS SCORE
+  - Exam Guide button at bottom with book icon, external link icon button adjacent
+  - Edit and delete icon buttons for admin controls
+  - "Add Practice Exam" button with plus icon and optional count badge
   
 - **States**:
-  - Cards: Default (white with border), Hover (elevated shadow)
-  - Buttons: Default (outlined), Active (filled), Hover (background change)
-  - Search: Default (white), Focus (ring border)
+  - Cards: Default (white with border), Hover (lifted with enhanced shadow)
+  - Buttons: Default (outlined or ghost), Hover (background color change)
+  - Stats: Always visible, using "-" for missing values
   
 - **Icon Selection**:
-  - **MagnifyingGlass**: Search functionality
-  - **Info**: Information/help icon
-  - **SquaresFour**: Grid view icon
-  - **List**: List view icon
-  - **AmazonLogo**: AWS provider icon
-  - **Cloud**: Azure provider icon
-  - **BookOpen**: Exam guide icon
+  - **Cloud (duotone)**: AWS and Azure provider icons
+  - **BookOpen**: Exam guide button
   - **ArrowSquareOut**: External link indicator
+  - **Plus**: Add practice exam button
+  - **PencilSimple**: Edit button
+  - **Trash**: Delete button
   
 - **Spacing**:
   - Card padding: p-6 (24px)
   - Grid gap: gap-6 (24px)
   - Container padding: px-4 py-8
-  - Stats grid: gap-4 (16px)
+  - Stats grid: gap-4 (16px) between columns, centered layout
+  - Generous margins between card sections (mb-3, mb-5, mb-6)
   
 - **Mobile**:
   - Grid: 1 column on mobile, 2 on tablet, 3 on desktop
-  - Search bar: Full width, elements stack if needed
-  - Cards: Full width with adjusted padding
-  - View toggle: Remains horizontal, smaller buttons
+  - Cards: Full width with maintained padding
+  - All interactive elements maintain minimum 44px touch targets
 - **Empty Search Query**: Allow empty search to show all results (filtered by provider if selected)
 - **Keyboard Navigation**: Support Enter key to trigger search without clicking button
 

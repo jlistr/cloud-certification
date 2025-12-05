@@ -94,22 +94,22 @@ export function CertificationsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-[oklch(0.98_0.002_240)]">
       <Toaster />
       <div className="container mx-auto px-4 py-8 max-w-7xl">
         <header className="mb-8 text-center">
           <div className="flex justify-center mb-3">
-            <BookOpen size={32} weight="duotone" className="text-[#3b82f6]" />
+            <BookOpen size={36} weight="duotone" className="text-[oklch(0.50_0.15_240)]" />
           </div>
-          <h2 className="text-2xl font-semibold text-foreground mb-2">
+          <h1 className="text-3xl font-bold text-foreground mb-2">
             Cloud Certification Hub
-          </h2>
+          </h1>
           <p className="text-muted-foreground text-base max-w-3xl mx-auto">
             Discover and explore popular cloud certifications from Microsoft Azure and AWS. Find the right certification for your career path.
           </p>
         </header>
 
-        <Card className="p-6 mb-6">
+        <Card className="p-6 mb-8 bg-white border border-[oklch(0.90_0.005_240)]">
           <div className="mb-4">
             <SearchBar 
               value={searchQuery} 
@@ -118,7 +118,7 @@ export function CertificationsPage() {
             />
           </div>
 
-          <div className="flex items-center justify-between pt-4 border-t">
+          <div className="flex items-center justify-between pt-4 border-t border-[oklch(0.93_0.005_240)]">
             <p className="text-sm text-muted-foreground">
               Showing {filteredCertifications.length} of {certifications.length} certifications
             </p>
